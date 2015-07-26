@@ -1,0 +1,67 @@
+Predict Variety of Iris
+========================================================
+
+- In this presentation we will describe the app created to predict the variety of iris for a given flower.
+
+- [Click Here](https://slaw7.shinyapps.io/CourseProject) to view the app.
+
+- [Click Here](https://github.com/SLaw7/ShinyIrisProject) to view server and ui files used to generate the app.
+
+Data
+========================================================
+
+- The data used is the 'iris' data provided with RStudio. The R Documentation gives the following description:
+
+> This famous (Fisher's or Anderson's) iris data set gives the
+> measurements in centimeters of the variables sepal length and width
+> and petal length and width, respectively, for 50 flowers from each of
+> 3 species of iris. The species are Iris setosa, versicolor, and
+> virginica.
+
+Model
+========================================================
+
+The model for this app was created using the 'caret' package and the 'random forest' method. 
+
+The code used to build the model is given below.
+
+```{r}
+library(caret)
+data(iris)
+set.seed(111)
+modFit <- train(iris$Species~., data=iris[,-5], method="rf", prox=TRUE)
+```
+
+Example
+========================================================
+Predict the variety of iris for a flower with the following measurements:
+- Sepal Length: 4.6cm, Sepal Width: 3cm
+- Petal Length: 2.6cm, Petal Width: 1.1cm
+
+Step 1: Create Data Frame with given inputs.
+
+```{r}
+data <- data.frame(
+    "Sepal Length"= 4.6, 
+    "Sepal Width"= 3,
+    "Petal Length"= 2.6,
+    "Petal Width"= 1.1,
+    stringsAsFactors=FALSE)
+```
+
+Example Continued
+========================================================
+
+Step 2: Use data and model to predict iris varity.
+
+```{r}
+prediction <- as.numeric( predict( modFit, newdata=data, type="prob" ))*100
+```
+
+Step 3: Interpret Results
+
+```{r}
+prediction
+```
+
+There is a `r prediction[1]` percent chance that the flower is *Setosa*, a `r prediction[2]` percent chance that the flower is *Versicolor*, and a `r prediction[3]` percent chance that the flower is *Virginica*.
